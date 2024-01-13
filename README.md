@@ -60,7 +60,7 @@
 
 
 ## Querydsl
-build.gradle queryDSL 설정 참조
+build.gradle queryDSL 설정 참조  
 ex code 
 ```java
 public interface ArticleRepository extends
