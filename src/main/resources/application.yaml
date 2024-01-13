@@ -22,10 +22,12 @@ spring:
       hibernate.format_sql: true
       hibernate.default_batch_fetch_size: 100
   sql.init.mode: always
-  #???, ??? json api ? ???? restful ?? ???? ??
+  #게시글, 댓글의 json api 를 자동으로 restful 하게 만들게끔 설정
   data.rest:
     base-path: /api
     detection-strategy: annotated
+  thymeleaf3:
+    decoupled-logic: false
 
 
 

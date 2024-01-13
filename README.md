@@ -57,3 +57,71 @@
 | /api/articles/{article-id}/articleComments                      | POST       | 본문, id                     |              |               |
 | /api/articles/{article-id}/articleComments/{article-comment-id} | PUT, PATCH | 본문	                        |              |               |
 | /api/articles/{article-id}/articleComments/{article-comment-id} | DELETE     | 댓글 id	                     |              |               |
+
+
+## Querydsl
+build.gradle queryDSL 설정 참조
+ex code 
+```java
+public interface ArticleRepository extends
+        JpaRepository<Article, Long>,
+        QuerydslPredicateExecutor<Article>,// 전체 테이블에 대한 기본 검색 ex) where title ="검색 내용"
+        QuerydslBinderCustomizer<QArticle> // 커스텀(Q클래스)
+{
+    @Override
+    default void customize(QuerydslBindings bindings, QArticle root) {
+        bindings.excludeUnlistedProperties(true);
+        bindings.including(root.title, root.content, root.createdAt, root.createdBy); // 여기에 들어가져있는 필드에서 만 검색 가능하게(부분 필드 검색)
+//        bindings.bind(root.title).first(StringExpression::likeIgnoreCase); // where like '%value'
+        bindings.bind(root.title).first(StringExpression::containsIgnoreCase); // where like '%value%'
+        ...
+
+    }
+}
+```
+참조   
+* https://ittrue.tistory.com/292   
+* https://medium.com/mo-zza/spring-data-jpa-querydsl-%EC%A0%81%EC%9A%A9-22a0364cd579
+
+
+## Thymeleaf
+thymeleaf decoupled logic : 순수 html과 Thymeleaf 구분  
+Thymeleaf : ex) header.th.xml 확장자가 xml  
+ThymeleafConfig 생성 후 설정 필용   
+```java
+@Configuration
+public class ThymeleafConfig {
+
+    @Bean
+    public SpringResourceTemplateResolver thymeleafTemplateResolver(
+            SpringResourceTemplateResolver defaultTemplateResolver,
+            Thymeleaf3Properties thymeleaf3Properties
+    ) {
+        defaultTemplateResolver.setUseDecoupledLogic(thymeleaf3Properties.isDecoupledLogic());
+
+        return defaultTemplateResolver;
+    }
+
+
+    @RequiredArgsConstructor
+    @Getter
+    @ConstructorBinding
+    @ConfigurationProperties("spring.thymeleaf3") // 사용자 지정 프로미터 yaml config 에서 사용 할수 있음 ex)spring.thymeleaf3.decoupled-logic: true
+    public static class Thymeleaf3Properties {
+        /**
+         * Use Thymeleaf 3 Decoupled Logic
+         */
+        private final boolean decoupledLogic;
+    }
+```
+Main Class 에서 @ConfigurationPropertiesScan 어노테이션 추가
+
+annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'  추가 시 사용자 지정 프로미터도 자동 완성 지원
+
+* 참고 코드: https://gist.github.com/djkeh/6e1d557ce8c466135b1541d342b1c25c
+* 참고 문서: https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#decoupled-template-logic
+
+## Security
+* 스프링 부트 2.7 (스프링 시큐리티 5.7) 부터 시큐리티 설정 방법이 바뀌었다. WebSecurityConfigurerAdapter는 deprecated되었고, SecurityFilterChain을 사용해야 함.
+* https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.7-Release-Notes#migrating-from-websecurityconfigureradapter-to-securityfilterchain
+* https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
