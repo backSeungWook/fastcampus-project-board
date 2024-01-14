@@ -2,11 +2,11 @@ package com.fastcampus.projectboard.controller;
 
 
 import com.fastcampus.projectboard.domain.type.SearchType;
-import com.fastcampus.projectboard.dto.response.ArticleCommentResponse;
 import com.fastcampus.projectboard.dto.response.ArticleResponse;
 import com.fastcampus.projectboard.dto.response.ArticleWithCommentsResponse;
 import com.fastcampus.projectboard.service.ArticleService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+
 
 @RequiredArgsConstructor
 @RequestMapping("/articles")
 @Controller
+@Slf4j
 public class ArticleController {
 
     private final ArticleService articleService;
@@ -42,7 +43,7 @@ public class ArticleController {
     public String article(@PathVariable Long articleId, ModelMap map){
 
         ArticleWithCommentsResponse  article = ArticleWithCommentsResponse.from(articleService.getArticle(articleId));
-
+        log.info("article {}",article);
         map.addAttribute("article", article);
         map.addAttribute("articleComments", article.articleCommentsResponse());
 
