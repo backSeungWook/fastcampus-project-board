@@ -94,6 +94,15 @@ public interface ArticleRepository extends
 * https://ittrue.tistory.com/292   
 * https://medium.com/mo-zza/spring-data-jpa-querydsl-%EC%A0%81%EC%9A%A9-22a0364cd579
 
+## OSIV
+```yaml
+spring:
+  jpa:
+    open-in-view: false
+```
+
+## JPA
+* getReferenceById()
 
 ## Thymeleaf
 thymeleaf decoupled logic : 순수 html과 Thymeleaf 구분  
@@ -137,12 +146,3 @@ annotationProcessor 'org.springframework.boot:spring-boot-configuration-processo
 * https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.7-Release-Notes#migrating-from-websecurityconfigureradapter-to-securityfilterchain
 * https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
 
-## OSIV
-```yaml
-spring:
-  jpa:
-    open-in-view: false
-```
-
-## JPA
-* getReferenceById()
