@@ -48,7 +48,7 @@ public class Article extends AuditingFields {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL) // mappedBy 지정 안해주면 스프링에서 중간 테이블을 만듬.
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
 
-//    @Setter private String hashtag; // 해시태그
+    @Setter private String hashtag; // 해시태그
 
     protected Article() {}
 

@@ -2,6 +2,7 @@ package com.fastcampus.projectboard.repository;
 
 import com.fastcampus.projectboard.domain.Article;
 import com.fastcampus.projectboard.domain.QArticle;
+import com.fastcampus.projectboard.repository.querydsl.ArticleRepositoryCustom;
 import com.querydsl.core.types.dsl.DateTimeExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import org.hibernate.criterion.SimpleExpression;
@@ -19,6 +20,7 @@ import java.util.stream.DoubleStream;
 @RepositoryRestResource //게시글, 댓글의 json api 를 자동으로 restful 하게 만들게끔 설정
 public interface ArticleRepository extends
         JpaRepository<Article, Long>,
+        ArticleRepositoryCustom,
         QuerydslPredicateExecutor<Article>,// 전체 테이블에 대한 기본 검색 ex) where title ="검색 내용"
         QuerydslBinderCustomizer<QArticle> // 커스텀(Q클래스)
 {
@@ -40,7 +42,7 @@ public interface ArticleRepository extends
 
 //    void deleteByIdAndUserAccount_UserId(Long articleId, String userid);
 
-//    Page<Article> findByHashtagNames(List<String> list, Pageable pageable);
+    Page<Article> findByHashtag(String hashtag, Pageable pageable);
 
 
 }

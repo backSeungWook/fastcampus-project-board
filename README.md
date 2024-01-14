@@ -94,6 +94,46 @@ public interface ArticleRepository extends
 * https://ittrue.tistory.com/292   
 * https://medium.com/mo-zza/spring-data-jpa-querydsl-%EC%A0%81%EC%9A%A9-22a0364cd579
 
+* 커스텀 Querydsl
+```java
+// 구현체
+public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport implements ArticleRepositoryCustom {
+
+    public ArticleRepositoryCustomImpl() {
+        super(Article.class);
+    }
+
+    @Override
+    public List<String> findAllDistinctHashtags() {
+        QArticle article = QArticle.article;
+
+        return from(article)
+                .distinct()
+                .select(article.hashtag)
+                .where(article.hashtag.isNotNull())
+                .fetch();
+    }
+
+}
+
+// 인테페이스
+public interface ArticleRepositoryCustom {
+    List<String> findAllDistinctHashtags();
+}
+
+
+// 커스텀 querydsl 적용
+@RepositoryRestResource //게시글, 댓글의 json api 를 자동으로 restful 하게 만들게끔 설정
+public interface ArticleRepository extends
+        JpaRepository<Article, Long>,
+        ArticleRepositoryCustom,
+        QuerydslPredicateExecutor<Article>,// 전체 테이블에 대한 기본 검색 ex) where title ="검색 내용"
+        QuerydslBinderCustomizer<QArticle> // 커스텀(Q클래스)
+{
+    ...
+}
+```
+
 ## OSIV
 ```yaml
 spring:
