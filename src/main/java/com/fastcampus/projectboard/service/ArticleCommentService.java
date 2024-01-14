@@ -6,6 +6,7 @@ import com.fastcampus.projectboard.domain.UserAccount;
 import com.fastcampus.projectboard.dto.ArticleCommentDto;
 import com.fastcampus.projectboard.repository.ArticleCommentRepository;
 import com.fastcampus.projectboard.repository.ArticleRepository;
+import com.fastcampus.projectboard.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class ArticleCommentService {
 
     private final ArticleRepository articleRepository;
     private final ArticleCommentRepository articleCommentRepository;
+    private final UserAccountRepository userAccountRepository;
 
     public List<ArticleCommentDto> searchArticleComment(Long articleId) {
         return List.of();
@@ -40,7 +42,9 @@ public class ArticleCommentService {
     public void saveArticleComment(ArticleCommentDto dto) {
         try {
 
-            articleCommentRepository.save(dto.toEntity(articleRepository.getReferenceById(dto.articleId()),null));
+            Article article = articleRepository.getReferenceById(dto.articleId());
+            UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
+            articleCommentRepository.save(dto.toEntity(article, userAccount));
         } catch (EntityNotFoundException e) {
             log.warn("댓글 저장 실패. 댓글의 게시글을 찾을 수 없습니다 - dto: {}", dto);
         }

@@ -18,7 +18,13 @@ public record ArticleDto(
         String createdBy,
         LocalDateTime modifiedAt,
         String modifiedBy
+
 ) {
+
+
+//    public static ArticleDto of(UserAccountDto userAccountDto, String title, String content, String hashtag) {
+//        return new ArticleDto(null, userAccountDto, title, content, hashtag, null, null, null, null);
+//    }
 
     public static ArticleDto of(UserAccountDto userAccountDto, String title, String content, Set<HashtagDto> hashtagDtos) {
         return new ArticleDto(null, userAccountDto, title, content, hashtagDtos, null, null, null, null);
@@ -45,20 +51,20 @@ public record ArticleDto(
         );
     }
 
-//    public Article toEntity(UserAccount userAccount) {
-//        return Article.of(
-//                userAccount,
-//                title,
-//                content
-//        );
-//    }
-
-    public Article toEntity() {
+    public Article toEntity(UserAccount userAccount) {
         return Article.of(
-                userAccountDto.toEntity(),
+                userAccount,
                 title,
                 content
         );
     }
+
+//    public Article toEntity() {
+//        return Article.of(
+//                userAccountDto.toEntity(),
+//                title,
+//                content
+//        );
+//    }
 
 }
