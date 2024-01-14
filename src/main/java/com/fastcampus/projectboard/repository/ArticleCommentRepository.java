@@ -27,4 +27,6 @@ public interface ArticleCommentRepository extends
         bindings.bind(root.createdAt).first(DateTimeExpression::eq); // where like '%value%'
         bindings.bind(root.createdBy).first(StringExpression::containsIgnoreCase); // where like '%value%'
     }
+
+    Object findByArticle_Id(Long articleId);// 게시글 아이디를 통해서 게시글 아이디에 해당하는 댓글들의 리스트(게시글로 댓글들을)
 }

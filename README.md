@@ -59,6 +59,17 @@
 | /api/articles/{article-id}/articleComments/{article-comment-id} | DELETE     | 댓글 id	                     |              |               |
 
 
+## 정적 팩토리 메서드(Static Factory Method)
+```java
+   // 예시
+   public static Article of(UserAccount userAccount, String title, String content) {
+        return new Article(userAccount, title, content);
+    }
+```
+[참고 자료1](https://inpa.tistory.com/entry/GOF-%F0%9F%92%A0-%EC%A0%95%EC%A0%81-%ED%8C%A9%ED%86%A0%EB%A6%AC-%EB%A9%94%EC%84%9C%EB%93%9C-%EC%83%9D%EC%84%B1%EC%9E%90-%EB%8C%80%EC%8B%A0-%EC%82%AC%EC%9A%A9%ED%95%98%EC%9E%90)  
+[참고 자료2](https://velog.io/@cjh8746/%EC%A0%95%EC%A0%81-%ED%8C%A9%ED%86%A0%EB%A6%AC-%EB%A9%94%EC%84%9C%EB%93%9CStatic-Factory-Method)
+
+
 ## Querydsl
 build.gradle queryDSL 설정 참조  
 ex code 
@@ -125,3 +136,13 @@ annotationProcessor 'org.springframework.boot:spring-boot-configuration-processo
 * 스프링 부트 2.7 (스프링 시큐리티 5.7) 부터 시큐리티 설정 방법이 바뀌었다. WebSecurityConfigurerAdapter는 deprecated되었고, SecurityFilterChain을 사용해야 함.
 * https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.7-Release-Notes#migrating-from-websecurityconfigureradapter-to-securityfilterchain
 * https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
+
+## OSIV
+```yaml
+spring:
+  jpa:
+    open-in-view: false
+```
+
+## JPA
+* getReferenceById()

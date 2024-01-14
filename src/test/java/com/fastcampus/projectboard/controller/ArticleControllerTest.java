@@ -11,18 +11,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("View 컨트롤러 - 게시글")
 @Import(SecuityConfig.class)
-@WebMvcTest(ArticleControler.class) // ArticleControler.class 만 읽어들임.
-class ArticleControlerTest {
+@WebMvcTest(ArticleController.class) // ArticleControler.class 만 읽어들임.
+class ArticleControllerTest {
 
     private final MockMvc mvc;
 
-    public ArticleControlerTest(@Autowired MockMvc mvc){
+    public ArticleControllerTest(@Autowired MockMvc mvc){
         this.mvc = mvc;
     }
 
