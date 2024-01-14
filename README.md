@@ -107,6 +107,7 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
     public List<String> findAllDistinctHashtags() {
         QArticle article = QArticle.article;
 
+        // QuerydslRepositorySupport 상속 받는 구현체에서는 from() 부터 시작
         return from(article)
                 .distinct()
                 .select(article.hashtag)
