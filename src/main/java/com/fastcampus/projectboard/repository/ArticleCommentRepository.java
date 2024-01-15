@@ -11,6 +11,8 @@ import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import java.util.List;
+
 @RepositoryRestResource //게시글, 댓글의 json api 를 자동으로 restful 하게 만들게끔 설정
 public interface ArticleCommentRepository extends
         JpaRepository<ArticleComment, Long>,
@@ -27,4 +29,7 @@ public interface ArticleCommentRepository extends
         bindings.bind(root.createdAt).first(DateTimeExpression::eq); // where like '%value%'
         bindings.bind(root.createdBy).first(StringExpression::containsIgnoreCase); // where like '%value%'
     }
+
+    List<ArticleComment> findByArticle_Id(Long articleId);// 게시글 아이디를 통해서 게시글 아이디에 해당하는 댓글들의 리스트(게시글로 댓글들을)
+    void deleteByIdAndUserAccount_UserId(Long articleCommentId, String userId);
 }

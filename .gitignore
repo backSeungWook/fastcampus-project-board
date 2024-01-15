@@ -39,3 +39,6 @@ out/
 
 ### Querydsl
 /src/main/generated
+
+### JPA Buddy
+.jpb/

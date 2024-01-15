@@ -14,8 +14,7 @@ import java.util.Set;
 @ToString(callSuper = true)
 @Table(indexes = {
         @Index(columnList = "title"),
-        @Index(columnList = "createdAt"),
-        @Index(columnList = "createdBy")
+//        @Index(columnList = "hashtag"),
 })
 @Entity
 public class Article extends AuditingFields {
@@ -24,6 +23,7 @@ public class Article extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+//    @Setter @ManyToOne(optional = false) private UserAccount userAccount; // 유저 정보 (ID)
 
     @Setter
     @JoinColumn(name = "userId")
@@ -48,17 +48,18 @@ public class Article extends AuditingFields {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL) // mappedBy 지정 안해주면 스프링에서 중간 테이블을 만듬.
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
 
+    @Setter private String hashtag; // 해시태그
 
     protected Article() {}
 
-    private Article( String title, String content) {
+    private Article(UserAccount userAccount, String title, String content) {
+        this.userAccount = userAccount;
         this.title = title;
         this.content = content;
     }
 
-
-    public static Article of( String title, String content) {
-        return new Article( title, content);
+    public static Article of(UserAccount userAccount, String title, String content) {
+        return new Article(userAccount, title, content);
     }
 
     public void addHashtag(Hashtag hashtag) {

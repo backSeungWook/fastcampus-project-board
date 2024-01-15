@@ -25,13 +25,14 @@ public class ArticleComment extends AuditingFields {
     private Long id;
 
     @Setter
+    @ManyToOne(optional = false)
+    private Article article; // 게시글 (ID)
+
+    @Setter
     @JoinColumn(name = "userId")
     @ManyToOne(optional = false)
     private UserAccount userAccount; // 유저 정보 (ID)
-
-    @Setter
-    @ManyToOne(optional = false)
-    private Article article; // 게시글 (ID)
+//    @Setter @ManyToOne(optional = false) private UserAccount userAccount; // 유저 정보 (ID)
 
     @Setter
     @Column(updatable = false)
@@ -47,14 +48,20 @@ public class ArticleComment extends AuditingFields {
 
     protected ArticleComment() {}
 
-    private ArticleComment(Article article,  Long parentCommentId, String content) {
+    private ArticleComment(Article article, UserAccount userAccount, Long parentCommentId, String content) {
         this.article = article;
+        this.userAccount = userAccount;
         this.parentCommentId = parentCommentId;
         this.content = content;
     }
 
-    public static ArticleComment of(Article article,  String content) {
-        return new ArticleComment(article,  null, content);
+    public static ArticleComment of(Article article, UserAccount userAccount, String content) {
+        return new ArticleComment(article, userAccount, null, content);
+    }
+
+    public void addChildComment(ArticleComment child) {
+        child.setParentCommentId(this.getId());
+        this.getChildComments().add(child);
     }
 
     @Override
