@@ -175,7 +175,7 @@ class ArticleServiceTest {
         // 아무런 일도 하지 않고 코드 적인 명시
         willDoNothing().given(articleRepository).delete(ArgumentMatchers.any(Article.class));
 
-        sut.deleteArticle(1L);
+//        sut.deleteArticle(1L);
 
         then(articleRepository).should().delete(ArgumentMatchers.any(Article.class));
 
@@ -187,7 +187,7 @@ class ArticleServiceTest {
 //        willDoNothing().given(hashtagService).deleteHashtagWithoutArticles(any());
 
         // When
-        sut.deleteArticle(1L);
+        sut.deleteArticle(1L,userId);
 
         // Then
         then(articleRepository).should().getReferenceById(articleId);

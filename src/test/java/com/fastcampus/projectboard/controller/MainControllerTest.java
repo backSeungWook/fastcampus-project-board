@@ -2,6 +2,7 @@ package com.fastcampus.projectboard.controller;
 
 
 import com.fastcampus.projectboard.config.SecuityConfig;
+import com.fastcampus.projectboard.config.TestSecurityConfig;
 import org.jboss.jandex.Main;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Import(SecuityConfig.class)
+@Import(TestSecurityConfig.class)
 @WebMvcTest(MainController.class)
 class MainControllerTest {
 

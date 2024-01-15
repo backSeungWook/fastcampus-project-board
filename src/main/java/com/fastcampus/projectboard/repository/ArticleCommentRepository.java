@@ -31,4 +31,5 @@ public interface ArticleCommentRepository extends
     }
 
     List<ArticleComment> findByArticle_Id(Long articleId);// 게시글 아이디를 통해서 게시글 아이디에 해당하는 댓글들의 리스트(게시글로 댓글들을)
+    void deleteByIdAndUserAccount_UserId(Long articleCommentId, String userId);
 }

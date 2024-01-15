@@ -10,6 +10,7 @@ import com.fastcampus.projectboard.dto.ArticleWithCommentsDto;
 import com.fastcampus.projectboard.repository.ArticleRepository;
 import com.fastcampus.projectboard.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 @Service
+@Slf4j
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
@@ -89,10 +91,21 @@ public class ArticleService {
     }
 
     public void updateArticle(Long articleId, ArticleDto dto) {
-        Article article = articleRepository.getReferenceById(articleId);
-        if (dto.title() != null ) { article.setTitle(dto.title()); }
-        if (dto.content() != null ) { article.setContent(dto.content()); }
+        try{
+            Article article = articleRepository.getReferenceById(articleId); // 게시글에 대한 정보
+            UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId()); // 로그인 유저
 
+            // article.getUserAccount() 현재 게시글에 대한 작성자에 대한 정보
+            // userAccount 현재 로그인 한 유저의 정보
+            if (article.getUserAccount().equals(userAccount)) { // 작성자와 로그인 유저가 같은지
+                if (dto.title() != null ) { article.setTitle(dto.title()); }
+                if (dto.content() != null ) { article.setContent(dto.content()); }
+
+                articleRepository.save(article);
+            }
+        }catch (EntityNotFoundException e){
+            log.warn("게시글 업데이트 실패. 게시글을 수정하는데 필요한 정보를 찾을 수 없습니다 - {}", e.getLocalizedMessage());
+        }
 //        Set<Long> hashtagIds = article.getHashtags().stream()
 //                .map(Hashtag::getId)
 //                .collect(Collectors.toUnmodifiableSet());
@@ -103,13 +116,17 @@ public class ArticleService {
 
 //        Set<Hashtag> hashtags = renewHashtagsFromContent(dto.content());
 //        article.addHashtags(hashtags);
-        articleRepository.save(article);
 
 
     }
 
-    public void deleteArticle(long articleId) {
-        articleRepository.deleteById(articleId);
+    public void deleteArticle(long articleId, String userId) {
+
+        articleRepository.deleteByIdAndUserAccount_UserId(articleId, userId);
+    }
+
+    public long getArticleCount() {
+        return articleRepository.count();
     }
 
     @Transactional(readOnly = true)
