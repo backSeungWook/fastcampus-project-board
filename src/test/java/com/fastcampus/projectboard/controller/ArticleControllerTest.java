@@ -110,6 +110,7 @@ class ArticleControllerTest {
                 .andExpect(view().name("articles/index"))
                 .andExpect(model().attributeExists("articles"))
                 .andExpect(model().attribute("paginationBarNumbers", barNumbers));
+
         then(articleService).should().searchArticles(null, null, pageable);
         then(paginationService).should().getPaginationBarNumbers(pageable.getPageNumber(), Page.empty().getTotalPages());
     }

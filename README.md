@@ -12,6 +12,44 @@
 
 * <https://github.com/djkeh/fastcampus-project-board/releases>
 
+## [소프트웨어 버전 작성](https://ko.wikipedia.org/wiki/%EC%86%8C%ED%94%84%ED%8A%B8%EC%9B%A8%EC%96%B4_%EB%B2%84%EC%A0%84_%EC%9E%91%EC%84%B1)
+
+## 배포
+### heroku
+```yaml
+#application.yaml에 내용 추가
+spring:
+  config.activate.on-profile: heroku
+  datasource:
+    url: ${JAWSDB_URL}
+  jpa.hibernate.ddl-auto: create
+  sql.init.mode: always
+```
+```properties
+#system.properties
+java.runtime.version=17
+```
+```
+// build.gradle Heroku 설정
+jar {
+    manifest {
+        attributes('Main-Class': 'com.fastcampus.projectboard.FastCampusProjectBoardApplication')
+    }
+```
+```
+//Procfile
+web: java $JAVA_OPTS -Dserver.port=$PORT -Dspring.profiles.active=heroku -jar build/libs/project-board-v1.1.jar
+```
+
+## Git
+### Rebase
+Git에서 한 브랜치에서 다른 브랜치로 합치는 방법은 Merge와 Rebase다.  
+Merge와 Rebase의 실행결과는 같지만 커밋 히스토리가 달라진다.  
+Merge는 쉽고 안전하지만 커밋히스토리가 지저분할 수 있다 반면 Rebase는 잘 모르고 사용할 경우  
+위험할 수 있어 까다롭지만 커밋히스토리를 깔끔하게 관리할 수 있다.  
+Rebase는 base를 새롭게 설정한다는 의미로 이해하면 좋다.  
+[reference](https://velog.io/@kwonh/Git-Rebase%EB%9E%80)
+
 
 ## API Endpoint
 | 종류                                                              | 	uri         | 	method            | 	기능	         | 설명 |
