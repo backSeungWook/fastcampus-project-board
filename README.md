@@ -219,6 +219,15 @@ spring:
   함수를 호출하고서, 실제로 그 데이터를 출력하거나 사용할때 SQL이 실행됩니다.  
   (다만, ``ID값을 호출할경우 SQL이 필요하지 않습니다.``)
 
+### ManyToMany
+* [다대다 연관관계](https://velog.io/@yuseogi0218/JPA-%EB%8B%A4%EB%8C%80%EB%8B%A4-%EC%97%B0%EA%B4%80%EA%B4%80%EA%B3%84)  
+* [다대다 연관관계 이슈](https://codeung.tistory.com/254)
+### N+1 이슈
+* [reference1](https://velog.io/@sweet_sumin/JPA-N1-%EC%9D%B4%EC%8A%88%EB%8A%94-%EB%AC%B4%EC%97%87%EC%9D%B4%EA%B3%A0-%ED%95%B4%EA%B2%B0%EC%B1%85%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94)
+
+### 순환 참조
+* [reference1](https://dev-coco.tistory.com/133)
+
 ## Thymeleaf
 thymeleaf decoupled logic : 순수 html과 Thymeleaf 구분  
 Thymeleaf : ex) header.th.xml 확장자가 xml  
@@ -538,3 +547,9 @@ void Test{
   @Test
   void withMockUserTest() { ... }
   ``` 
+  
+
+## Vault
+
+
+## Swagger UI

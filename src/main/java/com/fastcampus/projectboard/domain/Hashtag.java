@@ -23,7 +23,7 @@ public class Hashtag extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ToString.Exclude
+    @ToString.Exclude //순환 참조 문제 때문.
     @ManyToMany(mappedBy = "hashtags")
     private Set<Article> articles = new LinkedHashSet<>();
 
