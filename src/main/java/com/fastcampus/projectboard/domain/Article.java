@@ -34,10 +34,10 @@ public class Article extends AuditingFields {
     @Setter @Column(nullable = false, length = 10000) private String content; // 본문
 
     @ToString.Exclude
-    @JoinTable(
+    @JoinTable( //중심이 될 테이블의 필드에 붙인다.
             name = "article_hashtag",
-            joinColumns = @JoinColumn(name = "articleId"),
-            inverseJoinColumns = @JoinColumn(name = "hashtagId")
+            joinColumns = @JoinColumn(name = "articleId"), // 중심이 될 테이블에서 참조 할 컬럼 명
+            inverseJoinColumns = @JoinColumn(name = "hashtagId") //상대 방(HashTag)에서 참조 할 컬럼 명
     )
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Hashtag> hashtags = new LinkedHashSet<>();
@@ -78,12 +78,14 @@ public class Article extends AuditingFields {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Article that)) return false;
-        return this.getId() != null && this.getId().equals(that.getId());
+        return this.getId() != null && this.getId().equals(that.getId()); // 프록시 객체를 사용하는 하이버네이트의 지연 로딩을 고려하여(n+1), 값 비교를 제대로 수행하지 못하는 일이 없도록 한다.
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getId());
+        return Objects.hash(this.getId());// 프록시 객체를 사용하는 하이버네이트의 지연 로딩을 고려하여(n+1), 값 비교를 제대로 수행하지 못하는 일이 없도록 한다.
     }
+
+
 
 }
