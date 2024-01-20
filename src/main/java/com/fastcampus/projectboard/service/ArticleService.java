@@ -106,11 +106,11 @@ public class ArticleService {
                 if (dto.title() != null ) { article.setTitle(dto.title()); }
                 if (dto.content() != null ) { article.setContent(dto.content()); }
 
-
                 Set<Long> hashtagIds = article.getHashtags().stream()
                         .map(Hashtag::getId)
                         .collect(Collectors.toUnmodifiableSet());
-                article.clearHashtags();
+                article.clearHashtags(); //
+                System.out.println("article.clearHashtags()");
                 articleRepository.flush();
 
                 hashtagIds.forEach(hashtagService::deleteHashtagWithoutArticles);
@@ -136,6 +136,7 @@ public class ArticleService {
 
         hashtagIds.forEach(hashtagService::deleteHashtagWithoutArticles);
     }
+
 
     public long getArticleCount() {
         return articleRepository.count();
