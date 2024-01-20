@@ -99,7 +99,7 @@ class ArticleCommentControllerTest {
     }
 
     @WithUserDetails(value = "unoTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    @DisplayName("[view][POST] 대댓글 등록 - 정상 호출")
+    @DisplayName("[view][POST] 대댓글 등록 - 정상 호출 ")
     @Test
     void givenArticleCommentInfoWithParentCommentId_whenRequesting_thenSavesNewChildComment() throws Exception {
         // Given
