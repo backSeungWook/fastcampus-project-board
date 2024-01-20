@@ -43,9 +43,15 @@ public class HashtagService {
         return Set.copyOf(result);
     }
 
+    /**
+     * 삭세 혹은 수정 시 전체 게시글에 해당 해쉬태그가 없으면 해쉬태그 삭제
+     * @param hashtagId
+     */
     public void deleteHashtagWithoutArticles(Long hashtagId) {
         Hashtag hashtag = hashtagRepository.getReferenceById(hashtagId);
+
         if (hashtag.getArticles().isEmpty()) {
+            System.out.println("deleteHashtagWithoutArticles");
             hashtagRepository.delete(hashtag);
         }
     }

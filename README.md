@@ -559,6 +559,38 @@ void Test{
 ``특정한 규칙을 가진 문자열의 집합을 표현하는 데 사용하는 형식 언어이다``  
 정규 표현식이라는 문구는 일치하는 텍스트가 준수해야 하는 "패턴"을 표현하기 위해 특정한 표준의 텍스트 신택스를 의미하기 위해 사용된다.  
 [reference1](https://ko.wikipedia.org/wiki/%EC%A0%95%EA%B7%9C_%ED%91%9C%ED%98%84%EC%8B%9D)
+
+## TreeSet
+* 정렬을 보장.
+```java
+  public static ArticleCommentResponse of(
+          Long id, 
+          String content,
+          LocalDateTime createdAt,
+          String email,
+          String nickname,
+          String userId,
+          Long parentCommentId
+) {
+    // 정렬의 규칙 Comparator     
+    Comparator<ArticleCommentResponse> childCommentComparator = Comparator
+                // .comparing(ArticleCommentResponse::createdAt).reversed() // createdAt 기준 내림차 정렬
+                .comparing(ArticleCommentResponse::createdAt) // createdAt 기준으로 (기본은 오름차 정렬) 
+                .thenComparingLong(ArticleCommentResponse::id); // id 기준 
+        
+        return new ArticleCommentResponse(
+                id,
+                content,
+                createdAt,
+                email,
+                nickname,
+                userId,
+                parentCommentId,
+                new TreeSet<>(childCommentComparator)
+        );
+    }
+```
+
 ## Vault
 
 
