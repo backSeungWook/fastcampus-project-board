@@ -110,6 +110,7 @@ public class ArticleService {
                         .map(Hashtag::getId)
                         .collect(Collectors.toUnmodifiableSet());
                 article.clearHashtags(); //
+                System.out.println("article.clearHashtags()");
                 articleRepository.flush();
 
                 hashtagIds.forEach(hashtagService::deleteHashtagWithoutArticles);
