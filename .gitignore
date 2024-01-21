@@ -45,4 +45,4 @@ out/
 
 
 ### 프로파일
-/src/main/resources/application.yaml
+application.yaml
