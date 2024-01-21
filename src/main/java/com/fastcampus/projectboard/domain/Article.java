@@ -14,7 +14,8 @@ import java.util.Set;
 @ToString(callSuper = true)
 @Table(indexes = {
         @Index(columnList = "title"),
-//        @Index(columnList = "hashtag"),
+        @Index(columnList = "createdAt"),
+        @Index(columnList = "createdBy")
 })
 @Entity
 public class Article extends AuditingFields {
@@ -22,8 +23,6 @@ public class Article extends AuditingFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-//    @Setter @ManyToOne(optional = false) private UserAccount userAccount; // 유저 정보 (ID)
 
     @Setter
     @JoinColumn(name = "userId")
@@ -34,10 +33,10 @@ public class Article extends AuditingFields {
     @Setter @Column(nullable = false, length = 10000) private String content; // 본문
 
     @ToString.Exclude
-    @JoinTable( //중심이 될 테이블의 필드에 붙인다.
+    @JoinTable(
             name = "article_hashtag",
-            joinColumns = @JoinColumn(name = "articleId"), // 중심이 될 테이블에서 참조 할 컬럼 명
-            inverseJoinColumns = @JoinColumn(name = "hashtagId") //상대 방(HashTag)에서 참조 할 컬럼 명
+            joinColumns = @JoinColumn(name = "articleId"),
+            inverseJoinColumns = @JoinColumn(name = "hashtagId")
     )
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Hashtag> hashtags = new LinkedHashSet<>();
@@ -45,10 +44,9 @@ public class Article extends AuditingFields {
 
     @ToString.Exclude
     @OrderBy("createdAt DESC")
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL) // mappedBy 지정 안해주면 스프링에서 중간 테이블을 만듬.
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
 
-    @Setter private String hashtag; // 해시태그
 
     protected Article() {}
 
@@ -78,14 +76,12 @@ public class Article extends AuditingFields {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Article that)) return false;
-        return this.getId() != null && this.getId().equals(that.getId()); // 프록시 객체를 사용하는 하이버네이트의 지연 로딩을 고려하여(n+1), 값 비교를 제대로 수행하지 못하는 일이 없도록 한다.
+        return this.getId() != null && this.getId().equals(that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getId());// 프록시 객체를 사용하는 하이버네이트의 지연 로딩을 고려하여(n+1), 값 비교를 제대로 수행하지 못하는 일이 없도록 한다.
+        return Objects.hash(this.getId());
     }
-
-
 
 }

@@ -13,7 +13,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
-@Import(SecuityConfig.class)
+@Import(SecurityConfig.class)
 public class TestSecurityConfig {
 
     @MockBean private UserAccountRepository userAccountRepository;
