@@ -711,6 +711,43 @@ public record BoardPrincipal(
 
 
 ## Vault
+HashiCorp Vault는 데이터 암호화와 접근 제어를 통해 비밀 정보 관리를 위한 소프트웨어 도구이다.  
+비밀 정보(예: API 키, 비밀번호, 인증서)를 안전하게 저장하고, 사용자 인증과 권한 부여를 통해 엄격하게 제어하며, 감시할 수 있다.   
+Vault는 클라우드 환경과 같은 동적 인프라에서 사용하기에 적합하며, 다양한 인증 방법과 통합되어 보안을 강화하는 데 사용된다.  
+Vault Configuration 의존성 추가
+```
+ext {
+    set('springCloudVersion', "2021.0.5")
+}
 
+dependencies {
+  implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+```
+application.yaml: vault 설정 추가
+토큰은 보안 정보이므로 별도의 수단을 통해 넣어줘야 한다.
+
+```yaml
+spring:
+  application.name: fastcampus-board # Vault 설치 후 사이트(localhost:8200)에서 내가 만든 Project 명
+  cloud.vault:
+    scheme: http
+    authentication: TOKEN
+    token: ${VAULT_TOKEN}
+  config.import: vault://
+```
+
+localhost:8200에서 valult 에서 정하는 예시   
+``spring.datasource.username=test``
 
 ## Swagger UI
+
+## MFA
+
+
