@@ -1,6 +1,7 @@
 package com.fastcampus.projectboard.controller;
 
 
+import com.fastcampus.projectboard.config.SecuityConfig;
 import com.fastcampus.projectboard.config.TestSecurityConfig;
 import com.fastcampus.projectboard.service.ArticleService;
 import com.fastcampus.projectboard.service.PaginationService;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

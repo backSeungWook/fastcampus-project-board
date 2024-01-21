@@ -10,6 +10,17 @@ insert into user_account (user_id, user_password, nickname, email, memo, created
 ('uno3', '{noop}asdf1234', 'Uno3', 'uno3@mail.com', 'I am Uno3.', now(), 'uno3', now(), 'uno3')
 ;
 
+
+insert into article (user_id, title, content, created_by, modified_by, created_at, modified_at,hashtag) values
+('uno2', 'Quisque ut erat.', 'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.
+
+Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.
+
+Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.
+
+#pink', 'Kamilah', 'Murial', '2021-05-30 23:53:46', '2021-03-10 08:48:50','#pink')
+;
+
 -- 123 게시글
 insert into article (user_id, title, content, created_by, modified_by, created_at, modified_at) values
 ('uno2', 'Quisque ut erat.', 'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.
@@ -879,6 +890,9 @@ insert into article_comment (article_id, user_id, parent_comment_id, content, cr
 (56, 'uno', null, 'Sed ante. Vivamus tortor. Duis mattis egestas metus.', '2021-11-18 01:32:48', '2021-06-06 01:59:25', 'Vittorio', 'Milty'),
 (19, 'uno', null, 'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.', '2021-05-07 23:57:29', '2021-04-03 21:55:11', 'Oliver', 'Graehme')
 ;
+
+-- 대댓글
+
 
 -- 대댓글
 insert into article_comment (article_id, user_id, parent_comment_id, content, created_at, modified_at, created_by, modified_by) values

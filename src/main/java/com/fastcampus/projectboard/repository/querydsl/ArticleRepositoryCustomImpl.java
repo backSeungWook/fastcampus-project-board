@@ -24,7 +24,8 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
 
         return from(article)
                 .distinct()
-                .select(article.hashtags.any().hashtagName)
+                .select(article.hashtag)
+                .where(article.hashtag.isNotNull())
                 .fetch();
     }
 
@@ -40,5 +41,6 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
 
         return new PageImpl<>(articles, pageable, query.fetchCount());
     }
+
 
 }
