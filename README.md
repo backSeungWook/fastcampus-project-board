@@ -591,7 +591,124 @@ void Test{
     }
 ```
 
-## kakao 로그인
+## oauth2(kakao) 로그인
+
+```yaml
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_OAUTH_CLIENT_ID}
+            client-secret: ${KAKAO_OAUTH_CLIENT_SECRET}
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
+            client-authentication-method: POST
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize 
+            token-uri: https://kauth.kakao.com/oauth/token 
+            user-info-uri: https://kapi.kakao.com/v2/user/me # 인증 완료 된 사용자 정보 
+            user-name-attribute: id # 고유 식별자
+```
+
+### 인증 관련 유저 정보 클래스
+```java
+public record BoardPrincipal(
+        ...
+) implements UserDetails, OAuth2User {
+
+  // OAuth2(kakao,naver ..)에서 내려 받은 인증자 정보
+  @Override
+  public Map<String, Object> getAttributes() { 
+    return null;
+  }
+
+  // 인증 완료 된 사용자 이름
+  @Override
+  public String getName() {
+    return null;
+  }
+}
+```
+* OAuth2User implements 시 구현 해야 하는 메소드 getAttributes() / getName()
+* Kakao 인증 후 받은 Response 클래스 구현 KakaoOAuth2Response.java
+
+### 인증 설정 업데이트: OAuth 인증 설정 추가(SecurityConfig.java)
+```java
+  @Bean
+  public SecurityFilterChain securityFilterChain(
+          HttpSecurity http,
+          OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService
+  ) throws Exception {
+      return http
+              .oauth2Login(oAuth -> oAuth
+                      .userInfoEndpoint(userInfo -> userInfo
+                              .userService(oAuth2UserService)
+                      )
+              )
+              .build();
+  }
+  
+  //OAuth2UserService 등록
+  /**
+   * <p>
+   * OAuth 2.0 기술을 이용한 인증 정보를 처리한다.
+   * 카카오 인증 방식을 선택.
+   *
+   * <p>
+   * TODO: 카카오 도메인에 결합되어 있는 코드. 확장을 고려하면 별도 인증 처리 서비스 클래스로 분리하는 것이 좋지만, 현재 다른 OAuth 인증 플랫폼을 사용할 예정이 없어 이렇게 마무리한다.
+   *
+   * @param userAccountService  게시판 서비스의 사용자 계정을 다루는 서비스 로직
+   * @param passwordEncoder 패스워드 암호화 도구
+   * @return {@link OAuth2UserService} OAuth2 인증 사용자 정보를 읽어들이고 처리하는 서비스 인스턴스 반환
+   */
+  @Bean
+  public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService(
+          UserAccountService userAccountService,
+          PasswordEncoder passwordEncoder
+  ) {
+    final DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
+  
+    return userRequest -> {
+      OAuth2User oAuth2User = delegate.loadUser(userRequest);
+  
+      KakaoOAuth2Response kakaoResponse = KakaoOAuth2Response.from(oAuth2User.getAttributes());
+      // yaml  security-oauth2-client-registration 값 즉 kakao
+      String registrationId = userRequest.getClientRegistration().getRegistrationId(); 
+      String providerId = String.valueOf(kakaoResponse.id());
+      String username = registrationId + "_" + providerId;
+      String dummyPassword = passwordEncoder.encode("{bcrypt}" + UUID.randomUUID());
+  
+      return userAccountService.searchUser(username)
+              .map(BoardPrincipal::from)// DB에 카카오 인증 로그인 정보가 있을 경우
+              .orElseGet(() -> // 카카오 로그인 정보가 없을 경우 즉 처음으로 카카오 연동 로그인 한 경우
+                      BoardPrincipal.from(
+                              userAccountService.saveUser(
+                                      username,
+                                      dummyPassword,
+                                      kakaoResponse.email(),
+                                      kakaoResponse.nickname(),
+                                      null
+                              )
+                      )
+              );
+    };
+  
+  }
+```
+
+## 어노테이션
+### @ToString(callSuper = true)
+* 상속 받고 있는 부모 클래스에 있는 필드 까지 ToString으로 만들어주겠다.
+
+### @EntityListeners(AuditingEntityListener.class)
+
+### @MappedSuperclass 
+* 여러 테이블(@Entity) 클래스에서 중복되는 컬럼들을 상속으로 받을 수 있게 해줌.
+
+
 
 ## Vault
 

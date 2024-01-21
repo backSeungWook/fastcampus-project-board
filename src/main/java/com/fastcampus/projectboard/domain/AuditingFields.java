@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public abstract class AuditingFields {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // Web에서 보여질 때 포멧
-    @CreatedDate
+    @CreatedDate // 저장(Insert)될 때 시간이 자동으로 저장
     @Column(nullable = false, updatable = false)
     protected LocalDateTime createdAt; // 생성일시
 
@@ -30,7 +30,7 @@ public abstract class AuditingFields {
     protected String createdBy; // 생성자
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @LastModifiedDate
+    @LastModifiedDate // Entity의 값을 변경할 때 시간이 자동으로 저장
     @Column(nullable = false)
     protected LocalDateTime modifiedAt; // 수정일시
 
