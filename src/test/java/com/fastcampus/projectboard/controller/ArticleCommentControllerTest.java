@@ -1,9 +1,6 @@
 package com.fastcampus.projectboard.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-
-import com.fastcampus.projectboard.config.SecuityConfig;
 import com.fastcampus.projectboard.config.TestSecurityConfig;
 import com.fastcampus.projectboard.dto.ArticleCommentDto;
 import com.fastcampus.projectboard.dto.request.ArticleCommentRequest;

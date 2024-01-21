@@ -17,6 +17,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 @Slf4j
 public class ArticleCommentService {
 
@@ -48,6 +49,7 @@ public class ArticleCommentService {
 
             if (dto.parentCommentId() != null) {
                 ArticleComment parentComment = articleCommentRepository.getReferenceById(dto.parentCommentId());
+
                 parentComment.addChildComment(articleComment);
             } else {
                 articleCommentRepository.save(articleComment);
