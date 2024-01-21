@@ -18,12 +18,11 @@ public class ArticleCommentController {
 
     private final ArticleCommentService articleCommentService;
 
-    @PostMapping ("/new")
+    @PostMapping("/new")
     public String postNewArticleComment(
-            ArticleCommentRequest articleCommentRequest,
-            @AuthenticationPrincipal BoardPrincipal boardPrincipal
+            @AuthenticationPrincipal BoardPrincipal boardPrincipal,
+            ArticleCommentRequest articleCommentRequest
     ) {
-
         articleCommentService.saveArticleComment(articleCommentRequest.toDto(boardPrincipal.toDto()));
 
         return "redirect:/articles/" + articleCommentRequest.articleId();
