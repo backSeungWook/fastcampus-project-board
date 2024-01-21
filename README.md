@@ -711,6 +711,40 @@ public record BoardPrincipal(
 
 
 ## Vault
+Vault Configuration 의존성 추가
+```
+ext {
+    set('springCloudVersion', "2021.0.5")
+}
 
+dependencies {
+  implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+```
+application.yaml: vault 설정 추가
+토큰은 보안 정보이므로 별도의 수단을 통해 넣어줘야 한다.
+
+```yaml
+spring:
+  application.name: fastcampus-board # Vault 설치 후 사이트(localhost:8200)에서 내가 만든 Project 명
+  cloud.vault:
+    scheme: http
+    authentication: TOKEN
+    token: ${VAULT_TOKEN}
+  config.import: vault://
+```
+
+localhost:8200에서 valult 에서 정하는 예시   
+``spring.datasource.username=test``
 
 ## Swagger UI
+
+## MFA
+
+
