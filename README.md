@@ -747,6 +747,24 @@ localhost:8200에서 valult 에서 정하는 예시
 ``spring.datasource.username=test``
 
 ## Swagger UI
+REST API를 설계, 빌드, 문서화 및 사용하는 데 도움이되는 OpenAPI 사양을 중심으로 구축 된 오픈 소스 도구 세트입니다
+Swagger는 개발한 Rest API를 문서화 한다.  
+문서화된 내용을 통해 관리 & API 호출을 통한 테스트를 가능케 한다.  
+
+* 의존성 추가
+```
+ dependencies {
+  implementation 'org.springdoc:springdoc-openapi-ui:1.6.12'
+  implementation 'org.springdoc:springdoc-openapi-javadoc:1.6.12'
+  
+  annotationProcessor 'com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0'
+ }
+
+```
+* url : ``/swagger-ui``
+
+[reference](https://springdoc.org/#javadoc-support)
+
 
 ## MFA
 
