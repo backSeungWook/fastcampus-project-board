@@ -42,3 +42,7 @@ out/
 
 ### JPA Buddy
 .jpb/
+
+
+### 프로파일
+/src/main/resources/application.yaml
