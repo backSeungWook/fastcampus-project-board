@@ -287,9 +287,37 @@ https://www.thymeleaf.org/doc/articles/springsecurity.html
 
 ## Security
 * 스프링 부트 2.7 (스프링 시큐리티 5.7) 부터 시큐리티 설정 방법이 바뀌었다.  
-  WebSecurityConfigurerAdapter는 deprecated되었고, SecurityFilterChain을 사용해야 함.
+  WebSecurityConfigurerAdapter는 deprecated되었고, SecurityFilterChain을 사용해야 함.  
+ 
+### ``Configuring HttpSecurity``
+```java
+@Configuration
+public class SecurityConfiguration {
+    //빈 으로 등록하여 사용을 권장 함.
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests((authz) -> authz
+                .anyRequest().authenticated()
+            )
+            .httpBasic(withDefaults());
+        return http.build();
+    }
+}
+```
+### ``Configuring WebSecurity``
+```java
+@Configuration
+public class SecurityConfiguration {
+    //빈 으로 등록하여 사용을 권장 함.
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().antMatchers("/ignore1", "/ignore2");
+    }
+}
+```
 * [reference1](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.7-Release-Notes#migrating-from-websecurityconfigureradapter-to-securityfilterchain)
-* [reference2](https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter)         
+* [reference2 - 공식 API 문서](https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter)         
 
 
 ## JUNIT5
@@ -310,13 +338,6 @@ https://www.thymeleaf.org/doc/articles/springsecurity.html
 ```java
 //MemberController.java 
 //테스트대상인 컨트롤러입니다. 
-import com.example.junittut.model.Member;
-import com.example.junittut.service.MemberService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -373,11 +394,6 @@ public class MemberController {
 ```java
 //MemberService
 //서비스클래스입니다.(가짜객체를 만들어 사용합니다.)
-import com.example.junittut.model.Member;
-import com.example.junittut.repository.MemberMapper;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class MemberService {
@@ -410,9 +426,6 @@ public class MemberService {
 }
 
 //Memer
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 
 @Data
 @Builder
@@ -425,35 +438,6 @@ public class Member {
 
 ```java
 //테스트 코드
-import com.example.junittut.model.Member;
-import com.example.junittut.service.MemberService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultHandler;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.result.
-        MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.
-        MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.
-        MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.
-        MockMvcRequestBuilders.*;
 
 @WebMvcTest(MemberController.class)
 class MemberControllerUnitTest {
@@ -506,7 +490,7 @@ class MemberControllerUnitTest {
 perform(httpMethod)로 실행하며 andExpect, andDo, andReturn등으로 동작을 확인하는 방식입니다.
 
 
-### @MockBean MemberService memberService``  
+### @MockBean MemberService memberService
 MemberController는 MemberService를 스프링컨테이너에서 주입받고있으므로  
 가짜 객체를 만들어 컨테이너가 주입할 수 있도록 해줍니다.  
 해당객체는 가짜객체이므로 실제 행위를 하는 객체가 아닙니다.  
@@ -528,7 +512,7 @@ given을 통해 mock객체의 예상한 행위가 정상적으로 동작했는�
 해당 메서드가 실행됐는지를 검증해줍니다.
 
 ``shouldHaveNoInteractions``
-해당 의존성이 
+해당 메서드가 한번도 실행이 되지 않았을 때.(즉 상호작용이 ㅇ)
 
 ### @WithUserDetails(Test)
 
@@ -552,8 +536,84 @@ void Test{
   ``` 
 
 ### @ParameterizedTest
+* 여러 argument를 이용해 테스트를 여러번 돌릴 수 있는 테스트를 할 수 있는 기능
+* 사용하기 위해서는 @Test 대신 @ParameterizedTest 를 붙이면 된다.
+* @ParameterizedTest를 사용하게 되면 최소 하나의 source 어노테이션을 붙여주어야 한다.   
+예를 들어, 다음 테스트는 배열로 argument를 전달하는 @ValueSorce이다
+```java
+@ParameterizedTest
+@MethodSource("parametersProvider")
+void methodSourceTest(String str, int num, List<String> list) {
+  // (apple, 1, [a, b])랑 (banana, 2, [x, y])
+}
 
-### @MethodSource
+static Strema<Arguments> parametersProvider() {
+  return Stream.of(
+    arguments("apple", 1, Arrays.asList("a", "b")),
+    arguments("banana", 2, Arrays.asList("x", "y"))
+  );
+}
+
+
+//CsvSource
+//,(콤마) 로 분리된 문자열을 테스트 메소드의 파라미터로 넣어준다
+@ParameterizedTest
+@CsvSource({
+        "apple,    1",
+        "banana,   2",
+        "'lemon, lime', 3"
+})
+void csvSourceTest(String fruti, int rank) {
+  // (apple, 1) (banana, 2) ("lemon, lime", 3)이 각각 들어온다
+}
+```
+```java
+//Display Name 조절하기
+@DisplayName("Display name of container")
+@ParameterizedTest(name = "{index} ==> the rank of ''{0}'' is {1}")
+@CsvSource({ "apple, 1", "banana, 2", "'lemon, lime', 3" })
+void testWithCustomDisplayNames(String fruit, int rank) {
+}
+```
+``RESULT>``
+```
+Display name of container ✔
+├─ 1 ==> the rank of 'apple' is 1 ✔
+├─ 2 ==> the rank of 'banana' is 2 ✔
+└─ 3 ==> the rank of 'lemon, lime' is 3 ✔
+```
+
+```java
+
+@ParameterizedTest(name = "로또번호 : {0}, 결과 : {1}")
+//사용해 복잡한 인수들을 파라미터로 넘길 수 있습니다. Stream 를 반환하는 static 메서드를 작성해주면 됩니다.
+@MethodSource("lottoNumbersAndRank")
+@DisplayName("맞춘 번호에 따라 등수를 반환한다.")
+void findRank(Lotto lotto, Rank rank) {
+  assertThat(WINNER_LOTTO.findRank(lotto)).isEqualTo(rank);
+}
+
+private static List<Number> givenNumbers(int... numbers) {
+  return Arrays.stream(numbers)
+          .mapToObj(Number::new)
+          .collect(Collectors.toList());
+}
+
+static Stream<Arguments> lottoNumbersAndRank() {
+  return Stream.of(
+          Arguments.arguments(new Lotto(givenNumbers(1, 2, 3, 4, 5, 6)), Rank.FIRST),
+          Arguments.arguments(new Lotto(givenNumbers(1, 2, 3, 4, 5, 7)), Rank.SECOND),
+          Arguments.arguments(new Lotto(givenNumbers(1, 2, 3, 4, 5, 9)), Rank.THIRD),
+          Arguments.arguments(new Lotto(givenNumbers(1, 2, 3, 4, 9, 10)), Rank.FOURTH),
+          Arguments.arguments(new Lotto(givenNumbers(1, 2, 3, 8, 9, 10)), Rank.FIFTH),
+          Arguments.arguments(new Lotto(givenNumbers(1, 2, 8, 9, 10, 11)), Rank.NONE)
+  );
+}
+```
+
+[reference1](https://lannstark.tistory.com/52)  
+[reference2](https://github.com/mockito/mockito/wiki/Mockito-features-in-Korean)
+
 
 ## 정규식 패턴
 ``특정한 규칙을 가진 문자열의 집합을 표현하는 데 사용하는 형식 언어이다``  
@@ -658,7 +718,9 @@ public record BoardPrincipal(
    * 카카오 인증 방식을 선택.
    *
    * <p>
-   * TODO: 카카오 도메인에 결합되어 있는 코드. 확장을 고려하면 별도 인증 처리 서비스 클래스로 분리하는 것이 좋지만, 현재 다른 OAuth 인증 플랫폼을 사용할 예정이 없어 이렇게 마무리한다.
+   * TODO: 카카오 도메인에 결합되어 있는 코드. 
+   *   확장을 고려하면 별도 인증 처리 서비스 클래스로 분리하는 것이 좋지만, 
+   *   현재 다른 OAuth 인증 플랫폼을 사용할 예정이 없어 이렇게 마무리한다.
    *
    * @param userAccountService  게시판 서비스의 사용자 계정을 다루는 서비스 로직
    * @param passwordEncoder 패스워드 암호화 도구
@@ -704,10 +766,18 @@ public record BoardPrincipal(
 * 상속 받고 있는 부모 클래스에 있는 필드 까지 ToString으로 만들어주겠다.
 
 ### @EntityListeners(AuditingEntityListener.class)
-
+* @EntityListeners : JPA Entity에 Persist, Remove, Update, Load에 대한 event 전과 후에 대한 콜백 메서드를 제공한다.
+* AuditingEntityListener.class  : 기본 Entity Auditing 리스너.
+```java
+@EnableJpaAuditing // Config에서 Auditing 사용 한다고 명시 해줘야 함.
+@Configuration
+public class JpaConfig {
+    
+}
+```
+ 
 ### @MappedSuperclass 
 * 여러 테이블(@Entity) 클래스에서 중복되는 컬럼들을 상속으로 받을 수 있게 해줌.
-
 
 
 ## Vault
@@ -766,6 +836,12 @@ Swagger는 개발한 Rest API를 문서화 한다.
 [reference](https://springdoc.org/#javadoc-support)
 
 
-## MFA
+## MFA(다중 인증)
+Multi-factor authentication, MFA)은 적어도 다음 분류 중 두 가지에 한해 별도의 여러 증거 부분을 인증 매커니즘에  
+성공적으로 제시한 이후에만 사용자가 접근 권한이 주어지는 컴퓨터 접근 제어 방식의 하나이다.
 
+대중적인 여러 웹 서비스들은 다요소 인증을 사용하고 있으며, 일반적으로 기본값으로 비활성화되는 선택 기능이다.
 
+2요소 인증(Two-factor authentication)
+수많은 인터넷 서비스(구글, 아마존 AWS 등)는 개방형 시간 기반 일회용 비밀번호 알고리즘(TOTP)을  
+사용하여 다요소 또는 2요소 인증을 지원한다
