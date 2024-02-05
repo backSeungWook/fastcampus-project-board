@@ -228,6 +228,21 @@ spring:
 ### 순환 참조
 * [reference1](https://dev-coco.tistory.com/133)
 
+### @EntityListeners(AuditingEntityListener.class)
+* @EntityListeners : JPA Entity에 Persist, Remove, Update, Load에 대한 event 전과 후에 대한 콜백 메서드를 제공한다.
+* AuditingEntityListener.class  : 기본 Entity Auditing 리스너.
+```java
+@EnableJpaAuditing // Config에서 Auditing 사용 한다고 명시 해줘야 함.
+@Configuration
+public class JpaConfig {
+    
+}
+```
+
+ 
+### @MappedSuperclass 
+* 여러 테이블(@Entity) 클래스에서 중복되는 컬럼들을 상속으로 받을 수 있게 해줌.
+
 ## Thymeleaf
 thymeleaf decoupled logic : 순수 html과 Thymeleaf 구분  
 Thymeleaf : ex) header.th.xml 확장자가 xml  
@@ -764,20 +779,6 @@ public record BoardPrincipal(
 ## 어노테이션
 ### @ToString(callSuper = true)
 * 상속 받고 있는 부모 클래스에 있는 필드 까지 ToString으로 만들어주겠다.
-
-### @EntityListeners(AuditingEntityListener.class)
-* @EntityListeners : JPA Entity에 Persist, Remove, Update, Load에 대한 event 전과 후에 대한 콜백 메서드를 제공한다.
-* AuditingEntityListener.class  : 기본 Entity Auditing 리스너.
-```java
-@EnableJpaAuditing // Config에서 Auditing 사용 한다고 명시 해줘야 함.
-@Configuration
-public class JpaConfig {
-    
-}
-```
- 
-### @MappedSuperclass 
-* 여러 테이블(@Entity) 클래스에서 중복되는 컬럼들을 상속으로 받을 수 있게 해줌.
 
 
 ## Vault
