@@ -58,10 +58,13 @@ public class ArticleComment extends AuditingFields {
     }
 
 
-
+    /**
+     * this: 부모의 댓글
+     * @param child n차의 대댓글
+     */
     public void addChildComment(ArticleComment child) {
         child.setParentCommentId(this.getId());
-        this.getChildComments().add(child);
+        this.getChildComments().add(child); // INSERT
     }
 
     @Override
